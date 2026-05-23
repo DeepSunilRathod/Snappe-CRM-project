@@ -1,0 +1,36 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-logo">Snap<span>Pe</span> Leads</div>
+    <div class="login-sub">Sign in to your dashboard</div>
+
+    <div class="error-msg" [style.display]="errorMsg ? 'block' : 'none'">{{ errorMsg }}</div>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" [(ngModel)]="username" placeholder="Enter username" autocomplete="username" />
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" [(ngModel)]="password" placeholder="Enter password" autocomplete="current-password" (keydown.enter)="onLogin()" />
+    </div>
+
+    <button class="btn-login" (click)="onLogin()">Sign In</button>
+  </div>
+
+  <div class="demo-panel">
+    <div class="demo-title">Demo Accounts</div>
+
+    <ng-container *ngFor="let u of demoUsers">
+      <div class="demo-card" (click)="fillCredentials(u.username, u.password)">
+        <div class="demo-role" [ngClass]="{'role-admin': u.role==='admin', 'role-manager': u.role==='manager', 'role-salesrep': u.role==='salesrep'}">
+          {{ u.role === 'admin' ? 'Admin' : u.role === 'manager' ? 'Manager' : 'Sales Rep' }}
+        </div>
+        <div class="demo-creds">{{ u.username }} <span>/ {{ u.password }}</span></div>
+        <div class="demo-perms">
+          {{ u.role === 'admin' ? 'Full access, manage users, all leads' : u.role === 'manager' ? 'All leads, assign users, import and export' : 'Own leads, update status, own dashboard data' }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

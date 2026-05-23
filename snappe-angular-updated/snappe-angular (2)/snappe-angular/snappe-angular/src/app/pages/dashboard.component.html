@@ -1,0 +1,1092 @@
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     AI SCORE STYLES — injected here so they work with Angular's view encapsulation
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<style>
+  /* ── AI Score tab section ──────────────────────────────────────────────── */
+  .ai-score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 24px;
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .ai-score-badge.hot         { background: #fff0ee; color: #d84627; }
+  .ai-score-badge.warm        { background: #fff8ee; color: #e07b1a; }
+  .ai-score-badge.cold        { background: #eef4ff; color: #2563eb; }
+  .ai-score-badge.unqualified { background: #f5f5f5; color: #666;    }
+
+  .ai-reason-list { list-style: none; padding: 0; margin: 8px 0; }
+  .ai-reason-list li {
+    padding: 4px 0 4px 20px;
+    position: relative;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.5;
+  }
+  .ai-reason-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #22c55e;
+    font-weight: 700;
+  }
+
+  .ai-confidence-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: #eee;
+    margin: 8px 0 4px;
+  }
+  .ai-confidence-bar-inner {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    transition: width 0.7s ease;
+  }
+
+  .ai-action-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #166534;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  .ai-score-intro {
+    text-align: center;
+    padding: 28px 16px 20px;
+    color: #888;
+  }
+  .ai-score-intro .ai-intro-icon { font-size: 36px; margin-bottom: 10px; }
+  .ai-score-intro p { font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
+
+  .ai-score-loading {
+    text-align: center;
+    padding: 28px 16px;
+    color: #888;
+  }
+  .ai-score-loading .ai-spinner {
+    font-size: 28px;
+    animation: ai-spin 1.2s linear infinite;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  @keyframes ai-spin { to { transform: rotate(360deg); } }
+
+  .ai-error-box {
+    background: #fff0f0;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #b91c1c;
+    line-height: 1.5;
+  }
+  .ai-error-box code { font-size: 11px; color: #888; }
+
+  .ai-score-result { padding: 4px 0 16px; }
+  .ai-score-meta   { font-size: 12px; color: #888; margin-bottom: 2px; }
+  .ai-score-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 12px 0 4px;
+    color: #333;
+  }
+</style>
+
+<div class="app">
+  <!-- component styles moved to dashboard.component.css -->
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-name">SnapPe Leads</div>
+      <div class="logo-sub">CRM PLATFORM</div>
+    </div>
+    <ul class="nav">
+      <li class="nav-section-label">WORKSPACE</li>
+      <li class="active" id="navDashboard" onclick="showPage('dashboard')">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </span>
+        Dashboard
+        <span class="nav-dot" id="navDotDash"></span>
+      </li>
+      <li id="navLeads" onclick="showPage('leads')">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        Leads
+      </li>
+      <li id="navReports" onclick="showPage('reports')">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </span>
+        Reports
+      </li>
+      <li id="liUsers" hidden onclick="showPage('users')">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </span>
+        Users
+      </li>
+
+      <li id="liCustomCols" class="hidden" onclick="openColModal()">
+        <span class="nav-icon">⚙</span>
+        Custom Columns
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-dot" id="userDot"></div>
+        <div>
+          <div class="user-nm" id="userName"></div>
+          <div class="user-rl" id="userRole"></div>
+        </div>
+      </div>
+      <button onclick="logout()" class="logout-btn" title="Logout">⏻</button>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="pgTitle">Dashboard</div>
+        <div class="topbar-date"  id="pgDate"></div>
+      </div>
+
+      <!-- GLOBAL SEARCH -->
+      <div class="global-search-wrap">
+        <span class="gs-ico">🔍</span>
+        <input type="text" id="globalSearch"
+               placeholder="Search records..."
+               oninput="globalSearchInput()"
+               onfocus="showSearchDrop()"
+               autocomplete="off">
+        <div class="gs-dropdown hidden" id="gsDropdown"></div>
+      </div>
+
+      <div class="topbar-right-group">
+        <!-- NOTIFICATION BELL -->
+        <div class="bell-wrap" onclick="toggleNotifPanel()">
+          <span class="bell-ico">🔔</span>
+          <span class="bell-badge hidden" id="bellBadge"></span>
+        </div>
+        <!-- Layout toggle -->
+        <button class="btn btn-ghost tb-icon-btn" id="btnLayout" title="Toggle layout" onclick="toggleActivityFeed()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+        </button>
+        <!-- Add Lead -->
+        <button id="btnAddLead" class="btn btn-primary tb-new-lead" onclick="openLeadModal(-1)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Lead
+        </button>
+        <div class="topbar-actions" id="topActions"></div>
+        <button id="btnCustomCols" class="btn btn-ghost" onclick="openColModal()">⚙ Custom Columns</button>
+      </div>
+    </div>
+
+    <!-- NOTIFICATION PANEL -->
+    <div class="notif-panel hidden" id="notifPanel">
+      <div class="notif-hd">
+        <b>Notifications</b>
+        <button onclick="markAllRead()">Mark all read</button>
+      </div>
+      <div id="notifList"></div>
+    </div>
+
+    <!-- PAGE: DASHBOARD -->
+    <div id="pg-dashboard" class="page" hidden>
+      <div class="builder">
+
+        <!-- LEFT PALETTE -->
+        <div class="palette">
+          <div class="pal-title">Components</div>
+
+          <div class="pal-section">Visualizations</div>
+          <div class="pal-item" draggable="true" data-type="chart"      ondragstart="dragFromPalette(event)">
+            <div class="pal-ico purple">📊</div>
+            <div><div class="pal-name">Chart</div><div class="pal-sub">Bar, Line, Pie, Donut</div></div>
+          </div>
+          <div class="pal-item" draggable="true" data-type="kpi"        ondragstart="dragFromPalette(event)">
+            <div class="pal-ico blue">🔢</div>
+            <div><div class="pal-name">KPI</div><div class="pal-sub">Single number metric</div></div>
+          </div>
+          <div class="pal-item" draggable="true" data-type="funnel"     ondragstart="dragFromPalette(event)">
+            <div class="pal-ico orange">🔻</div>
+            <div><div class="pal-name">Funnel</div><div class="pal-sub">Pipeline stages</div></div>
+          </div>
+          <div class="pal-item" draggable="true" data-type="table"      ondragstart="dragFromPalette(event)">
+            <div class="pal-ico green">📋</div>
+            <div><div class="pal-name">Table</div><div class="pal-sub">Recent leads list</div></div>
+          </div>
+
+          <div class="pal-section">Analytics</div>
+          <div class="pal-item" draggable="true" data-type="target"     ondragstart="dragFromPalette(event)">
+            <div class="pal-ico red">🎯</div>
+            <div><div class="pal-name">Target Meter</div><div class="pal-sub">Goal vs actual</div></div>
+          </div>
+          <div class="pal-item" draggable="true" data-type="comparator" ondragstart="dragFromPalette(event)">
+            <div class="pal-ico teal">⚡</div>
+            <div><div class="pal-name">Comparator</div><div class="pal-sub">Won vs Lost</div></div>
+          </div>
+          <div class="pal-item" draggable="true" data-type="tasks"      ondragstart="dragFromPalette(event)">
+            <div class="pal-ico lime">✅</div>
+            <div><div class="pal-name">Tasks</div><div class="pal-sub">Today's task list</div></div>
+          </div>
+          <div class="pal-item" draggable="true" data-type="followups"  ondragstart="dragFromPalette(event)">
+            <div class="pal-ico purple">📅</div>
+            <div><div class="pal-name">Follow-ups</div><div class="pal-sub">Due today & overdue</div></div>
+          </div>
+
+          <div class="pal-hint">⠿ Drag onto the canvas →</div>
+        </div>
+
+        <!-- RIGHT: TABS + CANVAS -->
+        <div class="canvas-side">
+
+          <!-- Dashboard tabs -->
+          <div class="tabs-bar">
+            <div class="tabs" id="dashTabs"></div>
+            <div class="new-dash-widgets">
+              <button class="new-dash-btn" id="btnNewDash" title="New Dashboard" onclick="openNewDashModal()">＋ New Dashboard</button>
+            </div>
+          </div>
+
+          <!-- Drop Canvas + Activity Feed -->
+          <div class="canvas-activity-wrap">
+            <div class="canvas" id="canvas"
+                 ondragover="event.preventDefault()"
+                 ondrop="dropOnCanvas(event)">
+              <div class="canvas-empty" id="canvasEmpty">
+                <div class="empty-icon"> </div>
+                <div class="empty-title">Choose a Component</div>
+                <div class="empty-sub">Drag any component from the left panel and drop it here to build your dashboard.</div>
+              </div>
+              <div class="dashboard-summary" id="dashboardSummary"></div>
+              <div class="widgets-grid" id="widgetsGrid"></div>
+            </div>
+
+            <!-- ACTIVITY FEED -->
+            <div class="activity-feed" id="activityFeed">
+              <div class="af-hd">
+                <svg class="af-hd-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span>Activity</span>
+              </div>
+              <div class="af-body" id="afBody">
+                <div class="af-empty">No activity yet</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: LEADS -->
+    <div id="pg-leads" class="page" hidden>
+      <div class="toolbar">
+        <div class="search-box">
+          <span>🔍</span>
+          <input id="searchInput" placeholder="Search leads..." oninput="renderLeads()">
+        </div>
+        <select id="fSrc" onchange="renderLeads()">
+          <option value="">All Sources</option>
+        </select>
+        <select id="fStat" onchange="renderLeads()">
+          <option value="">All Status</option>
+        </select>
+        <span id="dynamicFiltersBar" class="dynamic-filters-bar"></span>
+        <select id="fAssign" onchange="renderLeads()" class="hidden">
+          <option value="">All Assignees</option>
+        </select>
+        <button id="btnSelectAllLeads" class="btn btn-ghost" onclick="toggleSelectAllLeads()">☑ Select All</button>
+        <button id="btnBulkDeleteLeads" class="btn btn-del" onclick="deleteSelectedLeads()" disabled>🗑 Delete Selected</button>
+        <span id="bulkLeadCount" class="muted"></span>
+        <button id="btnCols"   class="btn btn-ghost hidden" onclick="openColModal()">⚙ Columns</button>
+        <button id="btnImport" class="btn btn-ghost hidden" onclick="document.getElementById('impFile').click()">📂 Import</button>
+        <input  id="impFile" type="file" accept=".json,.csv" class="hidden" onchange="handleImport(event)">
+        <button id="btnExport" class="btn btn-ghost hidden" onclick="exportCSV()">⬇ Export</button>
+        <button class="btn btn-primary" onclick="openLeadModal(-1)">+ Add Lead</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-hd">
+          <b>Leads List</b>
+          <span id="leadsCnt" class="muted"></span>
+        </div>
+        <div class="overflow-x">
+          <table id="leadsTable">
+            <thead id="leadsHead"></thead>
+            <tbody id="leadsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: REPORTS -->
+    <div id="pg-reports" class="page hidden" hidden>
+      <div class="reports-grid" id="reportsGrid"></div>
+    </div>
+
+    <!-- PAGE: USERS -->
+    <div id="pg-users" class="page hidden" hidden>
+      <div class="panel">
+        <div class="panel-hd">
+          <b>User Management</b>
+          <button class="btn btn-primary btn-sm" onclick="openUserModal()">+ Add User</button>
+        </div>
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Username</th><th>Role</th><th>Leads</th><th>Actions</th></tr></thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONFIG MODAL -->
+<div class="modal-bg" id="configModal">
+  <div class="modal">
+    <div class="modal-hd"><span id="cfgModalTitle">Add Widget</span><button class="modal-close" onclick="closeConfigModal()">✕</button></div>
+    <div class="modal-bd">
+
+      <div class="field"><label>Name</label>
+        <input type="text" id="cfgName" placeholder="e.g. Leads by Source">
+      </div>
+
+      <div class="field" id="cfgRowChart">
+        <label>Chart Type</label>
+        <div class="ct-grid" id="ctGrid">
+          <div class="ct active" data-v="bar"       onclick="pickCT(this)">📊 Bar</div>
+          <div class="ct"        data-v="line"      onclick="pickCT(this)">📈 Line</div>
+          <div class="ct"        data-v="pie"       onclick="pickCT(this)">🥧 Pie</div>
+          <div class="ct"        data-v="doughnut"  onclick="pickCT(this)">🍩 Donut</div>
+          <div class="ct"        data-v="polarArea" onclick="pickCT(this)">🌈 Polar</div>
+          <div class="ct"        data-v="column"    onclick="pickCT(this)">📶 Column</div>
+        </div>
+      </div>
+
+      <!-- Group By removed -->
+
+      <div class="field" id="cfgRowField">
+        <label for="cfgFieldKey">Field</label>
+        <select id="cfgFieldKey" aria-label="Field"></select>
+        <div class="field-note">Choose a lead field, custom field, dropdown, multiselect, date, or relation field.</div>
+      </div>
+
+      <div class="field hidden" id="cfgRowPreset">
+        <label for="cfgAnalyticsPreset">Preset</label>
+        <select id="cfgAnalyticsPreset" aria-label="Analytics Preset" onchange="applyAnalyticsPreset()">
+          <option value="custom">Custom field</option>
+          <option value="source">By Source</option>
+          <option value="status">By Status</option>
+          <option value="assignedToName">By Assignee</option>
+          <option value="city">By City</option>
+          <option value="date_month">By Month</option>
+          <option value="date_day">By Day</option>
+        </select>
+      </div>
+
+      <div class="field hidden" id="cfgRowAnalyticsMode">
+        <label for="cfgAnalyticsMode">Analytics Mode</label>
+        <select id="cfgAnalyticsMode" aria-label="Analytics Mode">
+          <option value="count">Counts</option>
+          <option value="chart">Chart</option>
+          <option value="table">Table</option>
+          <option value="kpi">KPI</option>
+        </select>
+      </div>
+
+      <div class="field hidden" id="cfgRowKpi">
+        <label>Metric</label>
+        <select id="cfgKpiMetric" aria-label="Metric">
+          <option value="total">Total Leads</option>
+          <option value="won">Won Leads</option>
+          <option value="new">New Leads</option>
+          <option value="contacted">Contacted</option>
+          <option value="lost">Lost Leads</option>
+          <option value="calls">Total Calls</option>
+        </select>
+        <label>Color</label>
+        <div class="kpi-color-row">
+          <input type="color" id="cfgKpiColor" value="#6a11cb" aria-label="KPI Color" onchange="onKpiColorInput(this)">
+          <div class="kpi-colors">
+            <span class="kc active bg-purple" data-c="#6a11cb" onclick="pickKC(this)"></span>
+            <span class="kc bg-green" data-c="#10B981" onclick="pickKC(this)"></span>
+            <span class="kc bg-blue" data-c="#3498db" onclick="pickKC(this)"></span>
+            <span class="kc bg-orange" data-c="#f39c12" onclick="pickKC(this)"></span>
+            <span class="kc bg-red" data-c="#e74c3c" onclick="pickKC(this)"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field hidden" id="cfgRowTarget">
+        <label for="cfgTargetVal">Target Value</label>
+        <input type="number" id="cfgTargetVal" value="100">
+        <label for="cfgTargetMetric" class="mt-8">Metric</label>
+        <select id="cfgTargetMetric">
+          <option value="total">Total Leads</option>
+          <option value="won">Won Leads</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Size</label>
+        <div class="size-row">
+          <label><input type="radio" name="cfgSz" value="half" checked> Half</label>
+          <label><input type="radio" name="cfgSz" value="full"> Full Width</label>
+        </div>
+      </div>
+      <div class="field hidden" id="cfgRowTableFilters">
+        <label>Filters (Table/Funnel Widget)</label>
+        <div class="two-col">
+          <div>
+            <label for="cfgTableSource">Source</label>
+            <select id="cfgTableSource" aria-label="Table Source Filter"></select>
+          </div>
+          <div>
+            <label for="cfgTableStatus">Status</label>
+            <select id="cfgTableStatus" aria-label="Table Status Filter"></select>
+          </div>
+        </div>
+        <div class="mt8">
+          <label for="cfgTableAssignee">Assigned To</label>
+          <select id="cfgTableAssignee" aria-label="Table Assignee Filter"></select>
+        </div>
+        <div class="two-col mt8">
+          <div>
+            <label for="cfgTableDateFrom">Date From</label>
+            <input type="date" id="cfgTableDateFrom" aria-label="Widget Date From">
+          </div>
+          <div>
+            <label for="cfgTableDateTo">Date To</label>
+            <input type="date" id="cfgTableDateTo" aria-label="Widget Date To">
+          </div>
+        </div>
+      </div>
+      <div class="field hidden" id="cfgRowCols">
+        <label>Columns for Lead Counts</label>
+        <div id="cfgCols" class="new-dash-cols"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeConfigModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveWidget()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW DASHBOARD MODAL -->
+<div class="modal-bg hidden" id="newDashModal">
+  <div class="modal modal-sm">
+    <div class="modal-hd"><span>New Dashboard</span><button class="modal-close" onclick="closeNewDashboardModal()">✕</button></div>
+    <div class="modal-bd">
+      <div class="field"><label for="newDashName">Dashboard Name</label><input type="text" id="newDashName" placeholder="e.g. Sales Overview"></div>
+      <div class="field">
+        <label>Filters</label>
+        <div class="two-col">
+          <div>
+            <label foor="newDashFilterSource">Source</label>
+            <select id="newDashFilterSource" aria-label="Dashboard Source Filter"></select>
+          </div>
+          <div>
+            <label for="newDashFilterStatus">Status</label>
+            <select id="newDashFilterStatus" aria-label="Dashboard Status Filter"></select>
+          </div>
+        </div>
+        <div class="mt8">
+          <label for="newDashFilterAssignee">Assigned To</label>
+          <select id="newDashFilterAssignee" aria-label="Dashboard Assignee Filter"></select>
+        </div>
+        <div class="two-col mt8">
+          <div>
+            <label for="newDashFilterDateFrom">Date From</label>
+            <input type="date" id="newDashFilterDateFrom" aria-label="Dashboard Date From Filter">
+          </div>
+          <div>
+            <label for="newDashFilterDateTo">Date To</label>
+            <input type="date" id="newDashFilterDateTo" aria-label="Dashboard Date To Filter">
+          </div>
+        </div>
+      </div>
+      <!-- Widgets selection removed per user request -->
+      <!-- Removed Visible To and Columns options per request -->
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeNewDashboardModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="createDashboard()">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEAD MODAL -->
+<div class="modal-bg hidden" id="leadModal">
+  <div class="modal">
+    <div class="modal-hd"><span id="leadModalTitle">Add Lead</span><button class="modal-close" onclick="closeLeadModal()">✕</button></div>
+    <div class="modal-bd" id="leadFormBody"></div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeLeadModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveLead()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- COLUMNS MODAL -->
+<div class="modal-bg hidden" id="colModal">
+  <div class="modal">
+    <div class="modal-hd"><span>⚙ Custom Columns</span><button class="modal-close" onclick="closeColModalInline()">✕</button></div>
+    <div class="modal-bd">
+      
+      <!-- EXISTING COLUMNS LIST -->
+      <div class="col-section">
+        <div class="col-section-title">📋 Your Columns</div>
+        <div id="colList"></div>
+      </div>
+
+      <!-- DIVIDER -->
+      <hr class="sep">
+
+      <!-- CREATE NEW COLUMN FORM -->
+      <div class="col-section">
+        <div class="col-section-title">➕ Create New Column</div>
+        
+        <div class="two-col">
+          <div class="field">
+            <label for="newColName">Column Name</label>
+            <input type="text" id="newColName" placeholder="e.g. Budget, Service Type, Urgency..." aria-label="Column name">
+            <div class="field-note">Human-readable name that appears in forms and tables</div>
+          </div>
+          
+          <div class="field">
+            <label for="newColType">Data Type</label>
+            <select id="newColType" title="Column Type" aria-label="Column Type" onchange="toggleColOpts()">
+              <option value="">— Select Type —</option>
+              <option value="text">Text</option>
+              <option value="number">Number</option>
+              <option value="date">Date / Calendar</option>
+              <option value="select">Dropdown (Single)</option>
+              <option value="multiselect">Multi-Select</option>
+            </select>
+            <div class="field-note">Choose how to store and display this data</div>
+          </div>
+        </div>
+
+        <!-- RELATION ENTITY INPUT (hidden by default) -->
+        <div class="field hidden" id="colRelationBox">
+          <label for="newColRelation">Relation Entity Name</label>
+          <input type="text" id="newColRelation" placeholder="e.g. service_items, customers..." aria-label="Relation entity">
+          <div class="field-note">Name of the related database table</div>
+        </div>
+
+        <!-- OPTIONS EDITOR (for dropdown/multiselect) -->
+        <div class="field hidden" id="colOptsBox">
+          <label for="newOptionInput">Options</label>
+          <div class="field-note">Add the choices users will see in this dropdown or multi-select field</div>
+          
+          <div id="colOptionsList" class="col-options-list"></div>
+          
+          <div class="col-options-input-row">
+            <input type="text" id="newOptionInput" class="col-new-option-input" placeholder="Type option (e.g., Urgent, Standard, Low Priority)..." 
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();addOptionToList();document.getElementById('newOptionInput').focus();}" 
+                   aria-label="New option value">
+            <button type="button" class="btn btn-sm" onclick="addOptionToList()">Add</button>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTON -->
+        <div class="col-form-actions">
+          <button class="btn btn-primary mt8" id="newColActionBtn" onclick="addColumn()">+ Add Column</button>
+          <span id="colSaveStatus" class="col-save-status"></span>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="closeColModalInline()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- POST-COLUMN CREATION: WIDGET SUGGESTION MODAL -->
+<div class="modal-bg hidden" id="createWidgetFromColModal">
+  <div class="modal">
+    <div class="modal-hd"><span>✨ Create Widget</span><button class="modal-close" onclick="closeCreateWidgetFromColModal()">✕</button></div>
+    <div class="modal-bd">
+      <div class="cwm-intro">
+        <p class="cwm-intro-text">Column created successfully:</p>
+        <div class="cwm-col-info">
+          <div class="cwm-col-name" id="cwColName"></div>
+          <div class="cwm-col-type" id="cwColType"></div>
+        </div>
+        <p class="cwm-prompt">Would you like to create a widget with this column?</p>
+      </div>
+      
+      <div class="cwm-buttons-grid">
+        <button type="button" class="btn btn-outline" onclick="createWidgetFromCol('chart'); return false;" title="Bar, Line, Pie, Donut charts">
+          <div class="cwm-button-icon">📊</div>
+          <div class="cwm-button-label">Chart</div>
+        </button>
+        <button type="button" class="btn btn-outline" onclick="createWidgetFromCol('kpi'); return false;" title="Single metric">
+          <div class="cwm-button-icon">🔢</div>
+          <div class="cwm-button-label">KPI</div>
+        </button>
+        <button type="button" class="btn btn-outline" onclick="createWidgetFromCol('funnel'); return false;" title="Pipeline/funnel visualization">
+          <div class="cwm-button-icon">🔻</div>
+          <div class="cwm-button-label">Funnel</div>
+        </button>
+        <button type="button" class="btn btn-outline" onclick="createWidgetFromCol('table'); return false;" title="Data table">
+          <div class="cwm-button-icon">📋</div>
+          <div class="cwm-button-label">Table</div>
+        </button>
+        <button type="button" class="btn btn-outline" onclick="createWidgetFromCol('analytics'); return false;" title="Advanced analytics">
+          <div class="cwm-button-icon">📈</div>
+          <div class="cwm-button-label">Analytics</div>
+        </button>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeCreateWidgetFromColModal()">Skip for now</button>
+    </div>
+  </div>
+</div>
+
+<!-- WIDGET COLUMNS MODAL -->
+<div class="modal-bg hidden" id="widgetColModal">
+  <div class="modal">
+    <div class="modal-hd"><span>Columns for Lead Counts</span><button class="modal-close" onclick="closeWidgetColModalInline()">✕</button></div>
+    <div class="modal-bd">
+      <div id="widgetColList"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeWidgetColModalInline()">Cancel</button>
+      <button class="btn btn-primary" id="widgetColSaveBtn" onclick="saveWidgetCols()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGE WIDGETS MODAL -->
+<div class="modal-bg hidden" id="manageWidgetsModal">
+  <div class="modal">
+    <div class="modal-hd"><span>Manage Dashboard Widgets</span><button class="modal-close" onclick="closeManageWidgetsModal()">✕</button></div>
+    <div class="modal-bd">
+      <div class="widget-def-actions">
+        <button class="btn btn-primary" onclick="openCreateWidgetDefModal()">+ Create New Widget</button>
+      </div>
+      <div id="widgetDefList"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="closeManageWidgetsModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- WIDGET DEFINITION MODAL -->
+<div class="modal-bg hidden" id="widgetDefModal">
+  <div class="modal">
+    <div class="modal-hd"><span id="widgetDefModalTitle">Create Widget</span><button class="modal-close" onclick="closeWidgetDefModal()">✕</button></div>
+    <div class="modal-bd">
+      <div class="field"><label>Widget Name</label><input type="text" id="widgetDefName" placeholder="e.g. Sales Widget"></div>
+      <div class="field"><label for="widgetDefIcon">Icon (emoji)</label><input type="text" id="widgetDefIcon" class="icon-input" placeholder="🧩" maxlength="2"></div>
+      <div class="field"><label>Fields</label><div id="widgetDefFields"></div></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeWidgetDefModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="editingWidgetDefId ? saveWidgetDef() : createNewWidgetDef()">Save Widget</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIELD EDITOR MODAL -->
+<div class="modal-bg hidden" id="fieldModal">
+  <div class="modal">
+    <div class="modal-hd"><span>Add/Edit Field</span><button class="modal-close" onclick="closeFieldModal()">✕</button></div>
+    <div class="modal-bd">
+      <div class="field"><label>Field Name</label><input type="text" id="fieldName" placeholder="e.g. Revenue"></div>
+      <div class="field">
+        <label for="fieldType">Field Type</label>
+        <select id="fieldType" onchange="toggleFieldTypeOptions()">
+          <option value="text">Text</option>
+          <option value="number">Number</option>
+          <option value="date">Date</option>
+          <option value="email">Email</option>
+          <option value="phone">Phone</option>
+          <option value="url">URL</option>
+          <option value="textarea">Textarea</option>
+          <option value="checkbox">Checkbox</option>
+          <option value="dropdown">Dropdown</option>
+          <option value="multiselect">Multi-select</option>
+          <option value="radio">Radio Button</option>
+        </select>
+      </div>
+      <div class="field" id="fieldOptionsRow">
+        <label>Options (one per line)</label>
+        <textarea id="fieldOptions" placeholder="Option 1&#10;Option 2&#10;Option 3" rows="5"></textarea>
+      </div>
+      <div class="field">
+        <label><input type="checkbox" id="fieldRequired"> Required Field</label>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeFieldModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveField()">Save Field</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM WIDGET CONFIG MODAL -->
+<div class="modal-bg hidden" id="customWidgetConfigModal">
+  <div class="modal">
+    <div class="modal-hd"><span id="customWidgetConfigTitle">Add Custom Widget</span><button class="modal-close" onclick="closeCustomWidgetConfigModal()">✕</button></div>
+    <div class="modal-bd">
+      <div class="field"><label>Widget Name</label><input type="text" id="customWidgetName" placeholder="Widget title"></div>
+      <div id="customWidgetFieldsContainer"></div>
+      <div class="field">
+        <label>Size</label>
+        <div class="size-row">
+          <label><input type="radio" name="customWidgetSz" value="half" checked> Half</label>
+          <label><input type="radio" name="customWidgetSz" value="full"> Full Width</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeCustomWidgetConfigModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCustomWidget()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- USER MODAL -->
+<div class="modal-bg hidden" id="userModal">
+  <div class="modal modal-sm">
+    <div class="modal-hd"><span>Add User</span><button class="modal-close" onclick="closeUserModalInline()">✕</button></div>
+    <div class="modal-bd">
+      <div class="field"><label>Full Name</label><input type="text" id="nuName" placeholder="Anjali Sharma"></div>
+      <div class="field"><label>Username</label><input type="text" id="nuUser" placeholder="anjali"></div>
+      <div class="field"><label for="nuPass">Password</label><input type="password" id="nuPass" title="Password" placeholder="Enter password"></div>
+      <div class="field"><label>Role</label>
+        <select id="nuRole" title="Role" aria-label="Role">
+          <option value="salesrep">Sales Rep</option>
+          <option value="manager">Manager</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeUserModalInline()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveUser()">Create</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- LEAD DETAIL PANEL -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="dp-hd">
+    <div>
+      <div class="dp-name" id="dpName"></div>
+      <div class="dp-sub"  id="dpSub"></div>
+    </div>
+    <button class="dp-close" onclick="closeDetail()">✕</button>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="dp-status-bar" id="dpStatusBar"></div>
+
+  <!-- TABS — ★ AI Score tab added here -->
+  <div class="dp-tabs">
+    <div class="dp-tab active" onclick="switchDpTab('info',this)">Info</div>
+    <div class="dp-tab" onclick="switchDpTab('notes',this)">Notes</div>
+    <div class="dp-tab" onclick="switchDpTab('activity',this)">Activity</div>
+    <!-- ★ NEW TAB -->
+    <div class="dp-tab" onclick="switchDpTab('aiscore',this)">🤖 AI Score</div>
+  </div>
+
+  <!-- INFO TAB -->
+  <div class="dp-section" id="dpInfo">
+    <div class="dp-fields" id="dpFields"></div>
+
+    <div class="dp-block">
+      <div class="dp-block-title">Follow-up Date</div>
+      <div class="dp-followup-row">
+        <input type="date" id="dpFollowup" class="dp-input" title="Follow-up date" aria-label="Follow-up date">
+        <button class="btn btn-primary btn-sm" onclick="saveFollowup()">Save</button>
+      </div>
+    </div>
+
+    <div class="dp-block">
+      <div class="dp-block-title">Assigned To</div>
+      <select id="dpAssigned" class="dp-input" onchange="saveAssigned()" title="Assigned To" aria-label="Assigned To"></select>
+    </div>
+
+    <div class="dp-block">
+      <div class="dp-block-title">Quick Status Change</div>
+      <div class="status-btns" id="dpQuickStatus"></div>
+    </div>
+  </div>
+
+  <!-- NOTES TAB -->
+  <div class="dp-section hidden" id="dpNotes">
+    <div class="note-input-wrap">
+      <textarea id="noteInput" placeholder="Type a note..." rows="3"></textarea>
+      <button class="btn btn-primary btn-sm btn-flex-end" onclick="addNote()">Add Note</button>
+    </div>
+    <div id="notesList"></div>
+  </div>
+
+  <!-- ACTIVITY TAB -->
+  <div class="dp-section hidden" id="dpActivity">
+    <div id="activityList"></div>
+  </div>
+
+  <!-- ★ AI SCORE TAB — new section added here -->
+  <div class="dp-section hidden" id="dpAiscore">
+    <div id="aiScoreContent">
+      <!-- Default state: show intro + analyse button -->
+      <div class="ai-score-intro">
+        <div class="ai-intro-icon">🤖</div>
+        <p>Click below to analyse this lead using AI and get a quality score, key reasons, and a recommended next action.</p>
+        <button class="btn btn-primary" onclick="runAiScore()">Analyse Lead Quality</button>
+      </div>
+    </div>
+  </div>
+  <!-- ★ END AI SCORE TAB -->
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     AI SCORE — JAVASCRIPT
+     Placed at the bottom so all DOM elements above are already parsed.
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+
+  // ── Config ─────────────────────────────────────────────────────────────────
+  // Change this URL once the AI team deploys the service to a server.
+  var AI_SCORER_URL = 'https://hazily-margarita-slouchy.ngrok-free.dev';
+
+  // ── Intercept openDetail so we always have the current lead ────────────────
+  // We wait for the app to initialise, then wrap the existing openDetail()
+  // function so window.currentLead is always set when a lead is opened.
+  var _patchAttempts = 0;
+  function patchOpenDetail() {
+    if (typeof window.openDetail === 'function') {
+      var _orig = window.openDetail;
+      window.openDetail = function (lead) {
+        // Store reference so AI scorer can read it
+        window.currentLead = lead;
+        // Reset the AI tab to intro state for the new lead
+        resetAiScoreTab();
+        return _orig.apply(this, arguments);
+      };
+    } else {
+      // App may not have loaded yet — retry up to 20 times (10 s total)
+      _patchAttempts++;
+      if (_patchAttempts < 20) {
+        setTimeout(patchOpenDetail, 500);
+      }
+    }
+  }
+  // Start patching after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', patchOpenDetail);
+  } else {
+    patchOpenDetail();
+  }
+
+  // ── Reset AI tab when a new lead is opened ─────────────────────────────────
+  function resetAiScoreTab() {
+    var el = document.getElementById('aiScoreContent');
+    if (!el) return;
+    el.innerHTML = [
+      '<div class="ai-score-intro">',
+      '  <div class="ai-intro-icon">🤖</div>',
+      '  <p>Click below to analyse this lead using AI and get a quality score,',
+      '     key reasons, and a recommended next action.</p>',
+      '  <button class="btn btn-primary" onclick="runAiScore()">Analyse Lead Quality</button>',
+      '</div>'
+    ].join('');
+  }
+
+  // ── Build the parameter object from a SnapPe lead ──────────────────────────
+  function buildLeadParams(lead) {
+    // Helper: look up a custom column value by its displayName
+    function col(displayName) {
+      var cols = lead.customColumns || [];
+      for (var i = 0; i < cols.length; i++) {
+        if (cols[i].displayName && cols[i].displayName.trim().toLowerCase() === displayName.toLowerCase()) {
+          return cols[i].value || null;
+        }
+      }
+      return null;
+    }
+
+    return {
+      lead_id:              lead.id                             || null,
+      customer_name:        lead.customerName                   || null,
+      city:                 lead.city                           || null,
+      state:                lead.state                          || null,
+      country_code:         lead.countryCode                    || null,
+
+      // Lead origin
+      lead_source:          (lead.leadSource && lead.leadSource.sourceName) || null,
+      created_on:           lead.createdOn                      || null,
+
+      // Status
+      lead_status:          (lead.leadStatus && lead.leadStatus.statusName) || null,
+
+      // Engagement
+      total_calls:          lead.totalCalls                     || 0,
+      follow_up_date:       lead.followUpDate                   || null,
+      is_assigned:          !!lead.assignedTo,
+      last_call_on:         lead.lastCallOn                     || null,
+
+      // Deal
+      potential_deal_value: lead.potentialDealValue             || null,
+      actual_deal_value:    lead.actualDealValue                || null,
+
+      // Custom columns (mapped from your SnapPe custom column display names)
+      company_size:         col('Company Size'),
+      job_title:            col('Job Title'),
+      business_challenges:  col('Business Challenges'),
+      using_any_crm:        col('Using Any CRM'),
+      customer_type:        col('Customer Type'),
+      approval:             col('Approval'),
+      project_details:      col('Project Details'),
+      requirement:          col('Requirement')
+    };
+  }
+
+  // ── Render the score result inside the AI tab ──────────────────────────────
+  function renderAiScore(result) {
+    var labelClass   = result.label.toLowerCase().replace(/\s+/g, '-');
+    var confPct      = Math.round(result.confidence * 100);
+    var emoji        = { hot: '🔥', warm: '☀️', cold: '❄️' }[labelClass] || '⚠️';
+
+    var reasonsHtml = (result.reasons || []).map(function (r) {
+      return '<li>' + _esc(r) + '</li>';
+    }).join('');
+
+    document.getElementById('aiScoreContent').innerHTML = [
+      '<div class="ai-score-result">',
+
+      '  <div class="ai-score-badge ' + labelClass + '">',
+      '    ' + emoji + ' ' + _esc(result.label) + ' &mdash; ' + result.score + '/100',
+      '  </div>',
+
+      '  <div class="ai-score-meta">Confidence: ' + confPct + '%</div>',
+      '  <div class="ai-confidence-bar">',
+      '    <div class="ai-confidence-bar-inner" style="width:' + confPct + '%"></div>',
+      '  </div>',
+
+      '  <div class="ai-score-section-title">Why this score</div>',
+      '  <ul class="ai-reason-list">' + reasonsHtml + '</ul>',
+
+      '  <div class="ai-action-box">',
+      '    💡 <strong>Recommended action:</strong> ' + _esc(result.recommended_action),
+      '  </div>',
+
+      '  <button class="btn btn-ghost" onclick="runAiScore()" style="margin-top:14px;font-size:12px">',
+      '    ↻ Re-analyse',
+      '  </button>',
+
+      '</div>'
+    ].join('');
+  }
+
+  // ── Call the Python FastAPI scoring service ────────────────────────────────
+  window.runAiScore = function () {
+    var lead = window.currentLead;
+    if (!lead) {
+      document.getElementById('aiScoreContent').innerHTML =
+        '<p style="color:#888;font-size:13px;padding:16px 0">No lead loaded. Please open a lead first.</p>';
+      return;
+    }
+
+    // Show loading spinner
+    document.getElementById('aiScoreContent').innerHTML = [
+      '<div class="ai-score-loading">',
+      '  <div class="ai-spinner">🤖</div>',
+      '  <div style="font-size:13px">Analysing lead quality&hellip;</div>',
+      '</div>'
+    ].join('');
+
+    var params = buildLeadParams(lead);
+
+    fetch(AI_SCORER_URL + '/score-lead', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(params)
+    })
+    .then(function (resp) {
+      if (!resp.ok) throw new Error('Server returned ' + resp.status);
+      return resp.json();
+    })
+    .then(function (result) {
+      renderAiScore(result);
+      // Cache on the lead object so other parts of the app can use it
+      if (window.currentLead) {
+        window.currentLead.aiScore = result.score;
+        window.currentLead.aiLabel = result.label;
+      }
+    })
+    .catch(function (err) {
+      document.getElementById('aiScoreContent').innerHTML = [
+        '<div class="ai-error-box">',
+        '  ⚠️ Could not reach the AI scoring service.<br>',
+        '  <code>Make sure ai_lead_scorer.py is running on ' + AI_SCORER_URL + '</code>',
+        '  <br><br>',
+        '  <button class="btn btn-ghost" onclick="runAiScore()" style="font-size:12px">↻ Retry</button>',
+        '</div>'
+      ].join('');
+      console.error('[AI Scorer]', err);
+    });
+  };
+
+  // ── Batch score all leads (call from browser console if needed) ────────────
+  // Usage: batchScoreAllLeads(window.leads).then(console.log)
+  window.batchScoreAllLeads = function (leadsArray) {
+    var params = (leadsArray || []).map(buildLeadParams);
+    return fetch(AI_SCORER_URL + '/score-batch', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(params)
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (results) {
+      results.forEach(function (r, i) {
+        if (leadsArray[i]) {
+          leadsArray[i].aiScore = r.score;
+          leadsArray[i].aiLabel = r.label;
+        }
+      });
+      console.log('[AI Scorer] Batch complete —', results.length, 'leads scored.');
+      return results;
+    });
+  };
+
+  // ── Tiny HTML-escape helper ────────────────────────────────────────────────
+  function _esc(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+})();
+</script>

@@ -1,0 +1,98 @@
+:host {
+  display: block;
+}
+
+/* Styles moved from inline <style> block in dashboard.component.html */
+.overflow-x{overflow-x:auto}
+.col-modal{display:none}
+.col-opts-hidden{display:none}
+.user-modal{display:none}
+.btn-margin-top{margin-top:8px}
+.hr-spacer{margin:12px 0;border:none;border-top:1px solid #eee}
+.user-modal-max-width{max-width:380px}
+.new-dash-modal{display:none}
+.new-dash-widgets{display:flex;flex-wrap:wrap;gap:8px}
+.new-dash-cols{display:flex;flex-wrap:wrap;gap:8px;max-height:160px;overflow:auto}
+.dp-followup-row{display:flex;gap:8px;align-items:center}
+
+/* Widget management helper styles */
+.widget-def-actions{margin-bottom:16px}
+.icon-input{max-width:100px}
+#fieldOptionsRow{display:none}
+
+/* Dynamic filters placeholder (display contents to avoid extra wrapper) */
+.dynamic-filters-bar{display:contents}
+
+/* Column options list and input row moved from inline styles */
+.col-options-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;max-height:180px;overflow-y:auto}
+.col-options-input-row{display:flex;gap:8px;align-items:center}
+.col-new-option-input{flex:1}
+
+/* Column form sections */
+.col-section{margin-bottom:18px}
+.col-section-title{font-weight:600;color:#333;margin-bottom:12px;font-size:14px;letter-spacing:0.3px}
+.col-form-actions{display:flex;align-items:center;margin-top:12px}
+.col-save-status{margin-left:12px;font-size:13px;color:#666}
+
+/* Create Widget from Column Modal */
+#createWidgetFromColModal {
+  z-index: 1200;
+}
+#createWidgetFromColModal .modal {
+  position: relative;
+  z-index: 1201;
+  max-width: 600px;
+}
+.cwm-intro {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.cwm-intro-text {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+.cwm-col-info {
+  background: #f0f4f8;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+.cwm-col-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+.cwm-col-type {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+.cwm-prompt {
+  font-size: 14px;
+  color: #666;
+  margin: 12px 0;
+}
+.cwm-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+}
+.cwm-button-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+.cwm-button-label {
+  font-size: 12px;
+}
+
+/* Funnel visualization styles */
+.funnel-container { width: 100%; display:flex; justify-content:center; }
+.funnel-svg { width: 100%; height: auto; max-height: 420px; }
+.funnel-layer polygon { transition: opacity 0.15s ease, transform 0.15s ease; }
+.funnel-layer:hover polygon { filter: brightness(0.95); transform: translateY(-2px); }
+.funnel-text { font-size: 16px; fill: #fff; font-weight:700; pointer-events:none; }
+
+@media (max-width: 600px) {
+  .funnel-text { font-size: 12px; }
+  .funnel-svg { max-height: 360px; }
+}

@@ -1,0 +1,95 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: 'Outfit', sans-serif;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  padding: 20px;
+}
+
+.login-wrapper {
+  min-height: calc(100vh - 40px);
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 36px;
+  width: 380px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+}
+
+.login-logo { font-size: 22px; font-weight: 800; color: #6a11cb; margin-bottom: 6px; }
+.login-logo span { color: #2575fc; }
+.login-sub { font-size: 13px; color: #888; margin-bottom: 30px; }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; }
+.form-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #666; }
+.form-group input {
+  padding: 11px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.error-msg {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.demo-panel { width: 380px; }
+.demo-title {
+  color: rgba(255,255,255,0.75);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.demo-card {
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.demo-role { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+.role-admin { color: #c4b5fd; }
+.role-manager { color: #7dd3fc; }
+.role-salesrep { color: #6ee7b7; }
+
+.demo-creds { color: #fff; font-size: 13px; font-weight: 600; }
+.demo-creds span { color: rgba(255,255,255,0.55); font-weight: 400; font-size: 12px; }
+.demo-perms { margin-top: 6px; font-size: 11px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+@media (max-width: 900px) {
+  .login-wrapper { flex-direction: column; align-items: stretch; }
+  .login-card, .demo-panel { width: 100%; }
+}
